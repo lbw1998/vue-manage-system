@@ -1,0 +1,148 @@
+/* 公共class */
+.clear:after{
+	content:'';
+	display:block;
+	clear:both;
+}
+.clear{
+	zoom:1;
+}
+.fl{ 
+	float:left;
+}
+.fr{ 
+	float:right;
+}
+
+/* 公共样式 */
+html, body {
+  margin: 0;
+	padding: 0;
+	width: 100%;
+  height: 100%;
+}
+
+html {
+	font-size: 14px;
+}
+
+body {
+	background: #FAFAFA;
+}
+ul, li {
+  list-style: none;
+}
+@font-face {
+  font-family: 'ds-digitalnormal';
+  src: url('fonts/ds-digi-webfont.woff2') format('woff2')
+}
+.com-led-num {
+  font-family: ds-digitalnormal;
+}
+
+.el-tree-node__content {
+  margin: 10px 0;
+}
+/* .el-dialog__wrapper {
+ 
+  overflow: hidden!important;
+} */
+/* .el-dialog {
+  left: 100px!important;
+  margin-top: 120px !important;
+  width: calc(100% - 240px)!important;
+  height: 85vh!important;
+} */
+.custom-search input{
+  height: 32px !important;
+}
+.card-main {
+  width: 100%;
+  height: 85vh;
+}
+.btn-0{
+  color:#e66e15;
+}
+.btn-1{
+  color:#3ad039;
+}
+i.btn-0,
+i.btn-1{
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.li-btn {
+  background: rgb(227, 241, 209);
+  padding: 0px 5px;
+  margin: 2px 4px;
+  border-radius: 3px;
+  height: 30px;
+  line-height: 30px;
+}
+/* .el-dialog__body{
+  height: calc(100% - 140px);
+}
+.el-dialog__body form {
+  height:100%;
+  overflow:  auto;
+} */
+.el-tabs.el-tabs--top{
+  width:99%
+}
+.el-tree-node.is-current {
+color:#409EFF;
+background:rgba(0,0,0,.1)
+}
+.com-button-custom{
+  height: 24px!important;
+  line-height: 21px!important;
+  font-size: 12px!important;
+  padding: 2px 5px!important;
+}
+.footer {
+  position: fixed;
+  bottom: 29px;
+  text-align: center;
+  border-top: 1px dashed rgb(228, 231, 237);
+  width: calc(100% - 325px);
+  padding-top: 10px;
+}
+
+.el-form-item__content {
+  line-height: 28px!important;
+}
+.el-dialog__body .el-table td, .el-dialog__body  .el-table th{
+padding:0!important
+}
+.com-bg-red{
+  color:#f56c6c;
+}
+i.fa.custom-side-icon {
+  color: #e0e0e0;
+    font-size: 15px;
+    padding-right: 10px;
+}
+
+.custom-title {
+  width: 100%;
+  color: #00BFFF;
+  padding: 10px;
+  font-size: 16px;
+  text-align: left;
+  margin: 0;
+}
+
+.custom-title i {
+  width: 20px;
+  height: 20px;
+  /* background: url('../images/icon.png') no-repeat; */
+  background-size: 100% 100%;
+  animation: rotate 3s linear infinite;
+  margin-right: 10px;
+  display: inline-block;
+}
+.custom-textarea textarea{
+  width:230px!important;
+}
