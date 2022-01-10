@@ -1,13 +1,16 @@
 <template>
-  <div class="system-wrap">系统日志管理</div>
+  <div>
+    这里是二级目录text.vue
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "system",
+  name: "attestation",
   icon: "el-icon-info",
-  menuName: "系统日志管理",
-  sort: 1,
+  menuName: "Test",
+  sort: 3,
   data() {
     return {};
   },
@@ -17,6 +20,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.system-wrap {
+.attestation-wrap {
 }
 </style>

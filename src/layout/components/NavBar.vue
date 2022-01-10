@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="logo-wrap">
-      <div class="title">XXX管理系统</div>
+      <div class="title">身份标识管理系统</div>
       <div class="collapse" @click="changeCollapse()">
         <i :class="isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i>
       </div>

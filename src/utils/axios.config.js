@@ -55,7 +55,7 @@ service.interceptors.response.use(
   }
 );
 
-function ajaxRequest(method, url, type, params, token = false) {
+function request(method, url, type, params, token = false) {
   let contentType = [
     "application/x-www-form-urlencoded",
     "application/json",
@@ -93,4 +93,4 @@ function download(method, url, type, params) {
   axiosOptions.responseType = "blob";
   return service(axiosOptions);
 }
-export { ajaxRequest, download };
+export { request, download };

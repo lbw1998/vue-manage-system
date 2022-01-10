@@ -1,12 +1,12 @@
 <template>
-  <div class="business-wrap">业务日志审计</div>
+  <div class="business-wrap">商业管理</div>
 </template>
 
 <script>
 export default {
   name: "business",
   icon: "el-icon-info",
-  menuName: "业务日志审计",
+  menuName: "商业管理",
   data() {
     return {};
   },

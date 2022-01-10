@@ -1,13 +1,12 @@
 <template>
-  <div class="system-wrap">系统日志管理</div>
+  <div class="business-wrap">xxx</div>
 </template>
 
 <script>
 export default {
-  name: "system",
-  icon: "el-icon-info",
-  menuName: "系统日志管理",
-  sort: 1,
+  name: "business",
+  icon: "el-icon-setting",
+  menuName: "xxx",
   data() {
     return {};
   },
@@ -17,6 +16,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.system-wrap {
+.business-wrap {
 }
 </style>

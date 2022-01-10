@@ -1,146 +1,138 @@
 ﻿import store from "../store";
 //递归获取 views 文件夹下的所有.vue文件
-const files = require.context("@/views", true, /\.vue$/);
+const files = require.context(
+  "@/views",
+  true,
+  /^((?!index\.vue).)*\.vue((?!index\.vue).)*$/
+);
+const fileIndexs = require.context("@/views", true, /index\.vue$/);
+
 let pages = {};
+let pageIndexs = {};
+// 最多有几级目录
+let level = 1;
 files.keys().forEach(key => {
   pages[key.replace(/(\.\/|\.vue)/g, "")] = files(key).default;
 });
 
+// 所有的index.vue
+fileIndexs.keys().forEach(key => {
+  pageIndexs[key.replace(/(\.\/|\.vue)/g, "")] = fileIndexs(key).default;
+});
+
 //生成路由规则
 let routerList = [];
-let menuList = [];
-// 路由白名单
+// let menuList = [];
+// 路由黑名单
 const blackList = ["login", "components"];
 let maps = {};
-
-for (const key in pages) {
-  // 判断是否在黑名单内
+// 先构建父路由节点
+for (const key in pageIndexs) {
   if (blackList.some(item => key.toLowerCase().includes(item))) {
     continue;
   } else {
-    let viewName = key.split("/");
-    let menuName = pages[key].menuName;
-    // 是否为多级目录;
-    if (viewName.length > 1) {
-      let index = maps[viewName[0]];
-      // 如果已经存在一级目录
-      if (index !== undefined) {
-        // 如果是index
-        if (viewName[1] == "index") {
-          routerList[index].meta.title = menuName;
-          menuList[index].title = menuName;
-          menuList[index].icon = pages[key].icon;
-          menuList[index].level = pages[key].level;
-        } else {
-          routerList[index].children.push({
-            path: `/${key.toLowerCase()}`,
-            meta: { title: menuName },
-            name: pages[key].name,
-            component: () => import(`@/views/${key}.vue`)
-          });
-          menuList[index].children.push({
-            path: `/${key.toLowerCase()}`,
-            icon: pages[key].icon,
-            level: pages[key].level,
-            title: menuName
-          });
-        }
-      } else {
-        // 不存在一级目录
-        maps[viewName[0]] = routerList.length;
-        if (viewName[1] == "index") {
-          routerList.push({
-            meta: { title: menuName },
-            path: `/${viewName[0].toLowerCase()}`,
-            component: () => import(`@/views/${viewName[0]}/index.vue`),
-            children: []
-          });
-          menuList.push({
-            path: `/${key.toLowerCase()}`,
-            title: menuName,
-            icon: pages[key].icon,
-            level: pages[key].level,
-            children: []
-          });
-        } else {
-          routerList.push({
-            meta: { title: "" },
-            path: `/${viewName[0].toLowerCase()}`,
-            component: () => import(`@/views/${viewName[0]}/index.vue`),
-            children: [
-              {
-                path: `/${key.toLowerCase()}`,
-                name: pages[key].name,
-                meta: { title: menuName },
-                component: () => import(`@/views/${key}.vue`)
-              }
-            ]
-          });
-          menuList.push({
-            path: `/${viewName[0].toLowerCase()}`,
-            title: "",
-            children: [
-              {
-                path: `/${key.toLowerCase()}`,
-                icon: pages[key].icon,
-                level: pages[key].level,
-                title: menuName
-              }
-            ]
-          });
-        }
-      }
-    } else {
-      routerList.push({
-        path: `/${key.toLowerCase()}`,
-        name: pages[key].name,
+    const menuName = pageIndexs[key].menuName;
+    const path = pageIndexs[key].__file.slice(10, -10);
+    const routerArr = path.split("/");
+    if (routerArr.length > 1) {
+      routerArr.length > level && (level = routerArr.length);
+      maps[routerArr[routerArr.length - 1]] = {
+        parent: routerArr[routerArr.length - 2],
+        level: routerArr.length,
+        sort: pageIndexs[key].sort || 999,
+        icon: pageIndexs[key].icon,
+        title: menuName,
+        path: "/" + path.toLowerCase(),
         meta: { title: menuName },
-        component: () => import(`@/views/${key}.vue`)
-      });
-      menuList.push({
-        path: `/${key.toLowerCase()}`,
-        icon: pages[key].icon,
-        level: pages[key].level,
-        title: menuName
-      });
-    }
-  }
-}
-sortMenu(menuList);
-store.dispatch("setMenu", menuList);
-
-function sortMenu(list) {
-  // 带level的
-  let list1 = [];
-  // 不带level的
-  let list2 = [];
-  list.forEach(item => {
-    if (item.level) {
-      if (item.children) {
-        sortMenu(item.children);
-      }
-      // 如果list1为空
-      if (!list1.length) {
-        list1.push(item);
-      } else {
-        for (let i = 0; i < list1.length; i++) {
-          if (item.level >= list1[list1.length - 1].level) {
-            list1.push(item);
-            return;
-          }
-          if (item.level < list1[i].level) {
-            list1.splice(i, 0, item);
-            return;
-          }
-        }
-      }
+        component: () => import(`@/views/${path}/index.vue`),
+        children: []
+      };
     } else {
-      list2.push(item);
+      maps[routerArr[0]] = {
+        path: "/" + path.toLowerCase(),
+        level: routerArr.length,
+        sort: pageIndexs[key].sort || 999,
+        icon: pageIndexs[key].icon,
+        title: menuName,
+        meta: { title: menuName },
+        component: () => import(`@/views/${path}/index.vue`),
+        children: []
+      };
     }
-  });
-  let newList = [...list1, ...list2];
-  for (let i = 0; i < newList.length; i++) {
-    list[i] = newList[i];
   }
 }
+
+// 构建子节点
+for (const key in pages) {
+  if (blackList.some(item => key.toLowerCase().includes(item))) {
+    continue;
+  } else {
+    const menuName = pages[key].menuName;
+    const path = pages[key].__file.slice(10, -4);
+    const routerArr = path.split("/");
+    if (routerArr.length > 1) {
+      maps[routerArr[routerArr.length - 2]].children.push({
+        path: "/" + path.toLowerCase(),
+        level: routerArr.length,
+        sort: pages[key].sort || 999,
+        icon: pages[key].icon,
+        title: menuName,
+        meta: { title: menuName },
+        component: () => import(`@/views/${path}.vue`)
+      });
+    } else {
+      maps[routerArr[routerArr.length - 1]] = {
+        path: "/" + path.toLowerCase(),
+        sort: pages[key].sort || 999,
+        icon: pages[key].icon,
+        title: menuName,
+        meta: { title: menuName },
+        component: () => import(`@/views/${path}.vue`),
+        children: []
+      };
+    }
+  }
+}
+
+for (const key in maps) {
+  if (maps[key].children?.length > 0) {
+    maps[key].children = quickSort(maps[key].children);
+  }
+}
+while (level != 1) {
+  for (const key in maps) {
+    if (maps[key].level == level && maps[key].parent) {
+      delete maps[key].level;
+      maps[maps[key].parent].children.push(maps[key]);
+      delete maps[key];
+    }
+  }
+  level--;
+}
+for (const key in maps) {
+  routerList.push(maps[key]);
+}
+routerList = quickSort(routerList);
+
+function quickSort(arr) {
+  // 如果数组<=1 直接返回
+  if (arr.length <= 1) return arr;
+  let pivotIndex = Math.floor(arr.length / 2);
+  let pivot = arr.splice(pivotIndex, 1)[0];
+  // 定义左右数组
+  let left = [];
+  let right = [];
+  // 比基准小的放left，大的放right
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].sort <= pivot.sort) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+store.dispatch("setMenu", routerList);
+
 export default routerList;

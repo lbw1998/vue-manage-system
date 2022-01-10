@@ -10,7 +10,7 @@ export default {
   name: "attestation",
   icon: "el-icon-info",
   menuName: "审批管理",
-  level: 3,
+  sort: 3,
   data() {
     return {};
   },
